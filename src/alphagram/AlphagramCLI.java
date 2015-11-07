@@ -43,7 +43,7 @@ public class AlphagramCLI {
         
         // Display welcome message --
         System.out.println("-- Alphagram --");
-        System.out.println("Type \"quit\" to exit.\n");
+        System.out.println("Type \"quit\" to exit.");
         
         while(pursue) {
             System.out.print("> ");
@@ -52,7 +52,7 @@ public class AlphagramCLI {
             // Quit condition --
             if(line.toLowerCase().equals("quit")) {
                 pursue = false;
-                System.out.println("iQtu. Bey!");
+                System.out.println("ahknsT for ginsu Aaaghlmpr. Bey!");
             }
             // Standard line --
             else {
@@ -71,10 +71,7 @@ public class AlphagramCLI {
                      
             for (String word : words) {            
                 // Anagram --
-                Anagram anagram = new Anagram(word);
-                Alphagram alphagram = anagram.alphagram();
-                
-                System.out.print(alphagram.getRaw() + " (" + alphagram.getShort() + ")");
+                processWord(word);
                 
                 // Separators --
                 i++;
@@ -82,9 +79,14 @@ public class AlphagramCLI {
             }
         }
         
-        Anagram anagram = new Anagram(line);
+        processWord(line);
+        System.out.println();
+    }
+    
+    private static void processWord(String word) {
+        Anagram anagram = new Anagram(word);
         Alphagram alphagram = anagram.alphagram();
 
-        System.out.println(alphagram.getRaw() + " (" + alphagram.getShort() + ")");
+        System.out.print(alphagram.getRaw() + " (" + alphagram.getShort() + ")");
     }
 }
