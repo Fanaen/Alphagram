@@ -25,7 +25,11 @@ package alphagram;
 
 import alphagram.model.Alphagram;
 import alphagram.model.Anagram;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -37,6 +41,17 @@ public class AlphagramCLI {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        AlphagramCLI process = new AlphagramCLI();
+        process.run();
+    }
+    
+    // -- Attributes --
+    
+    private Map<String, Alphagram> variableMap = new HashMap<>();
+    
+    // -- Methods --
+    
+    private void run() {
         Scanner in = new Scanner(System.in, "UTF-8");
         String line = "";
         boolean pursue = true;
@@ -56,12 +71,46 @@ public class AlphagramCLI {
             }
             // Standard line --
             else {
-                processLine(line);
+                processOperation(line);
             }
         }
     }
+    
+    private void processOperation(String line) {
+        
+        Pattern p = Pattern.compile("^([a-zA-Z0-9]+) *= *(.+)$");
+        Matcher m = p.matcher(line.trim());
+        
+        if(m.matches()) {
+            String key = m.group(1);
+            Alphagram alphagram = processLine(m.group(2));
+            variableMap.put(key, alphagram);
+            
+            System.out.println("# " + key + " set.");
+        }
+        else {
+            processLine(line); 
+        }
+    }
+    
+    private String insertVariables(String line) {
+        Pattern p = Pattern.compile("\\$([a-zA-Z0-9]+)");
+        Matcher m = p.matcher(line);
+        
+        while(m.find()) {
+            String key = m.group(1);
+            Alphagram alpha = variableMap.get(key);
+            
+            if(alpha != null) {
+                line = line.replaceAll("\\$"+ key, alpha.getRaw());
+            }
+        }
+        
+        return line;
+    }
    
-    private static void processLine(String line) {
+    private Alphagram processLine(String line) {
+        line = insertVariables(line);
         String[] words = line.split(" ");
         System.out.print("# ");
         boolean add = true;
@@ -96,11 +145,13 @@ public class AlphagramCLI {
             System.out.print(" = ");
             display(alphagram);
             System.out.println();
+            return alphagram;
         }
         // Single words --
         else {
-            processWord(line);
+            Alphagram alphagram = processWord(line);
             System.out.println();
+            return alphagram;
         }
         
     }
