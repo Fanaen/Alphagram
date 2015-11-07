@@ -24,7 +24,10 @@
 package alphagram.model;
 
 import alphagram.helper.TextHelper;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -39,25 +42,54 @@ public class Alphagram {
     // -- Constructors --
     public Alphagram(String rawAnagram) {
         rawAlphagram = buildRawAlphagram(rawAnagram);
-        
-        letterOccurenceList = Alphagram.buildLetterOccurenceList(rawAnagram);
-        
+        letterOccurenceList = Alphagram.buildLetterOccurenceList(rawAlphagram);
     }
     
-    private static List<Letter> buildLetterOccurenceList(String rawAnagram) {
-        return null;
-    }
-
-    public String getRaw() {
-        return rawAlphagram;
-    }
-
     private String buildRawAlphagram(String rawAnagram) {
         String alphagram = rawAnagram;
         
         alphagram = TextHelper.removeDiacritics(alphagram);
+        alphagram = alphagram.toLowerCase(Locale.ENGLISH);
+        alphagram = TextHelper.removeNonLetters(alphagram);
+        alphagram = TextHelper.sortLetters(alphagram);
         
         return alphagram;
     }
     
+    private static List<Letter> buildLetterOccurenceList(String rawAnagram) {
+        char[] ar = rawAnagram.toCharArray();
+        List<Letter> newList = new LinkedList();
+        Letter currentLetter = null;
+        
+        for (char c : ar) {
+            // New character --
+            if(currentLetter == null || currentLetter.getLetter() != c) {
+                currentLetter = new Letter(c);
+                newList.add(currentLetter);
+            }
+            // Existing character --
+            else {
+                currentLetter.increaseNbOccurence();
+            }
+        }
+        
+        return newList;
+    }
+
+    
+    // -- Getters & Setters --
+    
+    public String getRaw() {
+        return rawAlphagram;
+    }
+    
+    public String getShort() {
+        String result = "";
+        
+        for (Letter l : letterOccurenceList) {
+            result += l.toStringReduced();
+        }
+        
+        return result;
+    }
 }

@@ -25,6 +25,7 @@ package alphagram.helper;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.Arrays;
 
 /**
  *
@@ -36,5 +37,15 @@ public class TextHelper {
         return Normalizer.normalize(input, Form.NFD)
             .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     } 
+
+    public static String removeNonLetters(String input) {
+        return input.replaceAll("[^a-zA-Z]", "");
+    }
+    
+    public static String sortLetters(String input) {
+        char[] ar = input.toCharArray();
+        Arrays.sort(ar);
+        return String.valueOf(ar);
+    }
     
 }

@@ -30,12 +30,13 @@ package alphagram.model;
 public class Letter {
     
     // -- Attributes --
-    private Character letter;
+    private char letter;
     private int nbOccurence;
     
     // -- Contructors --
-    public Letter(Character letter) {
+    public Letter(char letter) {
         this.letter = letter;
+        nbOccurence = 1;
     }
     
     // -- Methods --
@@ -43,13 +44,28 @@ public class Letter {
         String result = "";
         
         for (int i = 0; i < nbOccurence; i++) {
-            result += letter.toString();
+            result += letter;
         }
         
         return result;
     }
     
     public String toStringReduced() {
-        return letter.toString() + nbOccurence;
+        return String.valueOf(letter) + (nbOccurence > 1 ? nbOccurence : "" );
     }
+    
+    // -- Getters & Setters --
+
+    public char getLetter() {
+        return letter;
+    }
+
+    public int getNbOccurence() {
+        return nbOccurence;
+    }
+
+    void increaseNbOccurence() {
+        nbOccurence++;
+    }
+    
 }

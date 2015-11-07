@@ -66,7 +66,7 @@ public class Alphagram {
         
         System.out.print("Anagram:");
         anagram = new Anagram(in.nextLine());
-        System.out.println(anagram.alphagram().getRaw());
+        System.out.println(anagram.alphagram().getRaw() + " <" + anagram.alphagram().getShort() + ">");
     }
     
 }
