@@ -23,6 +23,7 @@
  */
 package alphagram;
 
+import alphagram.model.Alphagram;
 import alphagram.model.Anagram;
 import java.util.Scanner;
 
@@ -30,43 +31,34 @@ import java.util.Scanner;
  *
  * @author Fanaen <contact@fanaen.fr>
  */
-public class Alphagram {
+public class AlphagramCLI {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in, "UTF-8");
-        int choice = 0;
+        String line = "";
+        boolean pursue = true;
         
         // Display welcome message --
         System.out.println("-- Alphagram --");
-        System.out.println("  1. Register an anagram");
-        System.out.println("  0. Quit");
+        System.out.println("Type \"quit\" to exit.");
         
-        do {
-            System.out.print("Your choice:");
-            choice = in.nextInt();
+        while(pursue) {
+            System.out.print("> ");
+            line = in.nextLine();
             
-            switch(choice) {
-                case 0:
-                    System.out.println("Bye!");
-                    break;
-                case 1:
-                    register();
-                    break;
+            if(line.toLowerCase().equals("quit")) {
+                pursue = false;
+                System.out.println("iQtu. Bey!");
             }
-            
-        } while(choice != 0);
-    }
+            else {
+                Anagram anagram = new Anagram(line);
+                Alphagram alphagram = anagram.alphagram();
 
-    private static void register() {
-        Scanner in = new Scanner(System.in, "UTF-8");
-        Anagram anagram = null;
-        
-        System.out.print("Anagram:");
-        anagram = new Anagram(in.nextLine());
-        System.out.println(anagram.alphagram().getRaw() + " <" + anagram.alphagram().getShort() + ">");
-    }
-    
+                System.out.println("# " + alphagram.getRaw() + " (" + alphagram.getShort() + ")");
+            }
+        }
+    }    
 }
