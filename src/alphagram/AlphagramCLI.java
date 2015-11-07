@@ -43,22 +43,48 @@ public class AlphagramCLI {
         
         // Display welcome message --
         System.out.println("-- Alphagram --");
-        System.out.println("Type \"quit\" to exit.");
+        System.out.println("Type \"quit\" to exit.\n");
         
         while(pursue) {
             System.out.print("> ");
             line = in.nextLine();
             
+            // Quit condition --
             if(line.toLowerCase().equals("quit")) {
                 pursue = false;
                 System.out.println("iQtu. Bey!");
             }
+            // Standard line --
             else {
-                Anagram anagram = new Anagram(line);
-                Alphagram alphagram = anagram.alphagram();
-
-                System.out.println("# " + alphagram.getRaw() + " (" + alphagram.getShort() + ")");
+                processLine(line);
             }
         }
     }    
+
+    private static void processLine(String line) {
+        String[] words = line.split(" ");
+        System.out.print("# ");
+        
+        // Multiple words --
+        if(words.length > 1) {
+            int i = 0;
+                     
+            for (String word : words) {            
+                // Anagram --
+                Anagram anagram = new Anagram(word);
+                Alphagram alphagram = anagram.alphagram();
+                
+                System.out.print(alphagram.getRaw() + " (" + alphagram.getShort() + ")");
+                
+                // Separators --
+                i++;
+                System.out.print(i == words.length ? " = " : " + ");
+            }
+        }
+        
+        Anagram anagram = new Anagram(line);
+        Alphagram alphagram = anagram.alphagram();
+
+        System.out.println(alphagram.getRaw() + " (" + alphagram.getShort() + ")");
+    }
 }
