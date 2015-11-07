@@ -25,6 +25,8 @@ package alphagram.model;
 
 import alphagram.helper.TextHelper;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -76,20 +78,67 @@ public class Alphagram {
         return newList;
     }
 
+    public void apply(Alphagram processedWord, int coef) {
+        // Transform item to add as modifier --
+        processedWord.applyCoef(coef);
+        
+        // Merge lists and sort the result --
+        letterOccurenceList.addAll(processedWord.letterOccurenceList);
+        Collections.sort(letterOccurenceList);
+        
+        // Merge multiple items --
+        Letter lastLetter = null;
+        for (Iterator<Letter> iterator = letterOccurenceList.iterator(); iterator.hasNext();) {
+            Letter next = iterator.next();
+            
+            if(lastLetter != null && lastLetter.equals(next)) {
+                // Items are identical, merge them --
+                lastLetter.increaseNbOccurence(next.getNbOccurence());
+                iterator.remove();
+            }
+            else {
+                // Items are not identical, pursue --
+                lastLetter = next;
+            }
+        }
+    }
+
     
     // -- Getters & Setters --
     
     public String getRaw() {
-        return rawAlphagram;
+        String positive = "", negative = "";
+        
+        for (Letter l : letterOccurenceList) {
+            if(l.getNbOccurence() > 0) {
+                positive += l.toStringExpanded();
+            }
+            else {
+                negative += l.toStringExpanded();
+            }
+        }
+        
+        return positive + (negative.equals("") ? "" : "-" + negative);
     }
     
     public String getShort() {
-        String result = "";
+        String positive = "", negative = "";
         
         for (Letter l : letterOccurenceList) {
-            result += l.toStringReduced();
+            if(l.getNbOccurence() > 0) {
+                positive += l.toStringReduced();
+            }
+            else {
+                negative += l.toStringReduced();
+            }
         }
         
-        return result;
+        return positive + (negative.equals("") ? "" : "-" + negative);
+    }
+
+    private void applyCoef(int coef) {
+        for (Letter l : letterOccurenceList) {
+            l.setNbOccurence(coef * l.getNbOccurence());
+        }
     }
 }

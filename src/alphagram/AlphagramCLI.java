@@ -59,34 +59,60 @@ public class AlphagramCLI {
                 processLine(line);
             }
         }
-    }    
-
+    }
+   
     private static void processLine(String line) {
         String[] words = line.split(" ");
         System.out.print("# ");
+        boolean add = true;
         
         // Multiple words --
         if(words.length > 1) {
             int i = 0;
+            Alphagram alphagram = new Alphagram("");
                      
-            for (String word : words) {            
-                // Anagram --
-                processWord(word);
-                
-                // Separators --
+            for (String word : words) {   
                 i++;
-                System.out.print(i == words.length ? " = " : " + ");
+                
+                // Handle operators --
+                if(word.trim().equals("+") || word.trim().equals("-")) {
+                    add = word.equals("+");
+                    continue;
+                }
+                
+                if(add) {
+                    // Add the word to the result --
+                    if(i>1) System.out.print(" + ");
+                    alphagram.apply(processWord(word), +1);
+                    
+                }
+                else {
+                    // Withdraw the word to the result --
+                    if(i>1) System.out.print(" - ");
+                    alphagram.apply(processWord(word), -1);
+                }
             }
+                
+            System.out.print(" = ");
+            display(alphagram);
+            System.out.println();
+        }
+        // Single words --
+        else {
+            processWord(line);
+            System.out.println();
         }
         
-        processWord(line);
-        System.out.println();
     }
     
-    private static void processWord(String word) {
+    private static Alphagram processWord(String word) {
         Anagram anagram = new Anagram(word);
         Alphagram alphagram = anagram.alphagram();
-
+        display(alphagram);
+        return alphagram;
+    }
+    
+    private static void display(Alphagram alphagram) {
         System.out.print(alphagram.getRaw() + " (" + alphagram.getShort() + ")");
     }
 }

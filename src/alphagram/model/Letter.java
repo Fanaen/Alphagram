@@ -27,7 +27,7 @@ package alphagram.model;
  *
  * @author Fanaen <contact@fanaen.fr>
  */
-public class Letter {
+public class Letter implements Comparable<Letter> {
     
     // -- Attributes --
     private char letter;
@@ -43,7 +43,7 @@ public class Letter {
     public String toStringExpanded() {
         String result = "";
         
-        for (int i = 0; i < nbOccurence; i++) {
+        for (int i = 0; i < Math.abs(nbOccurence); i++) {
             result += letter;
         }
         
@@ -51,7 +51,10 @@ public class Letter {
     }
     
     public String toStringReduced() {
-        return String.valueOf(letter) + (nbOccurence > 1 ? nbOccurence : "" );
+        if(nbOccurence == 0) return "";
+        
+        int nb = Math.abs(nbOccurence);        
+        return String.valueOf(letter) + (nb == 1 ? "" : nb );
     }
     
     // -- Getters & Setters --
@@ -63,9 +66,33 @@ public class Letter {
     public int getNbOccurence() {
         return nbOccurence;
     }
+    
+    public void setNbOccurence(int value) {
+        nbOccurence = value;
+    }
 
     void increaseNbOccurence() {
-        nbOccurence++;
+        increaseNbOccurence(1);
     }
+
+    void increaseNbOccurence(int value) {
+        nbOccurence += value;
+    }
+    
+    // -- Overrided methods --
+    @Override
+    public int compareTo(Letter l) {
+        return this.letter >= l.letter ? 1 : -1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Letter) {
+            Letter letter = (Letter) obj;
+            return letter.letter == this.letter;
+        }
+        return false;
+    }
+    
     
 }
