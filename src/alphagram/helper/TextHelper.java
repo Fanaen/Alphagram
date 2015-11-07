@@ -21,35 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.model;
+package alphagram.helper;
+
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 
 /**
  *
  * @author Fanaen <contact@fanaen.fr>
  */
-public class Letter {
+public class TextHelper {
     
-    // -- Attributes --
-    private Character letter;
-    private int nbOccurence;
+    public static String removeDiacritics(String input) {
+        return Normalizer.normalize(input, Form.NFD)
+            .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    } 
     
-    // -- Contructors --
-    public Letter(Character letter) {
-        this.letter = letter;
-    }
-    
-    // -- Methods --
-    public String toStringExpanded() {
-        String result = "";
-        
-        for (int i = 0; i < nbOccurence; i++) {
-            result += letter.toString();
-        }
-        
-        return result;
-    }
-    
-    public String toStringReduced() {
-        return letter.toString() + nbOccurence;
-    }
 }

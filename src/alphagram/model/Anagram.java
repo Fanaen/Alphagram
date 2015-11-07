@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2015 Fanaen <contact@fanaen.fr>.
@@ -27,29 +27,25 @@ package alphagram.model;
  *
  * @author Fanaen <contact@fanaen.fr>
  */
-public class Letter {
+public class Anagram {
     
     // -- Attributes --
-    private Character letter;
-    private int nbOccurence;
+    private String rawAnagram;
+    private Alphagram alphagram;
     
-    // -- Contructors --
-    public Letter(Character letter) {
-        this.letter = letter;
+    // -- Constructors --
+    public Anagram(String rawAnagram) {
+        this.rawAnagram = rawAnagram;
+        this.alphagram  = new Alphagram(rawAnagram);
+    }
+
+    public String getRaw() {
+        return rawAnagram;
+    }
+
+    public Alphagram alphagram() {
+        return alphagram;
     }
     
-    // -- Methods --
-    public String toStringExpanded() {
-        String result = "";
-        
-        for (int i = 0; i < nbOccurence; i++) {
-            result += letter.toString();
-        }
-        
-        return result;
-    }
     
-    public String toStringReduced() {
-        return letter.toString() + nbOccurence;
-    }
 }

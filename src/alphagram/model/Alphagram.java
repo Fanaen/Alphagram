@@ -23,10 +23,41 @@
  */
 package alphagram.model;
 
+import alphagram.helper.TextHelper;
+import java.util.List;
+
 /**
  *
  * @author Fanaen <contact@fanaen.fr>
  */
 public class Alphagram {
+
+    // -- Attributes --
+    private String rawAlphagram;
+    private List<Letter> letterOccurenceList;
+    
+    // -- Constructors --
+    public Alphagram(String rawAnagram) {
+        rawAlphagram = buildRawAlphagram(rawAnagram);
+        
+        letterOccurenceList = Alphagram.buildLetterOccurenceList(rawAnagram);
+        
+    }
+    
+    private static List<Letter> buildLetterOccurenceList(String rawAnagram) {
+        return null;
+    }
+
+    public String getRaw() {
+        return rawAlphagram;
+    }
+
+    private String buildRawAlphagram(String rawAnagram) {
+        String alphagram = rawAnagram;
+        
+        alphagram = TextHelper.removeDiacritics(alphagram);
+        
+        return alphagram;
+    }
     
 }

@@ -3,3 +3,4 @@ lib/
 manifest.mf
 nbproject/
 
+/build/

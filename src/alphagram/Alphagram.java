@@ -23,6 +23,9 @@
  */
 package alphagram;
 
+import alphagram.model.Anagram;
+import java.util.Scanner;
+
 /**
  *
  * @author Fanaen <contact@fanaen.fr>
@@ -33,7 +36,37 @@ public class Alphagram {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Scanner in = new Scanner(System.in, "UTF-8");
+        int choice = 0;
+        
+        // Display welcome message --
+        System.out.println("-- Alphagram --");
+        System.out.println("  1. Register an anagram");
+        System.out.println("  0. Quit");
+        
+        do {
+            System.out.print("Your choice:");
+            choice = in.nextInt();
+            
+            switch(choice) {
+                case 0:
+                    System.out.println("Bye!");
+                    break;
+                case 1:
+                    register();
+                    break;
+            }
+            
+        } while(choice != 0);
+    }
+
+    private static void register() {
+        Scanner in = new Scanner(System.in, "UTF-8");
+        Anagram anagram = null;
+        
+        System.out.print("Anagram:");
+        anagram = new Anagram(in.nextLine());
+        System.out.println(anagram.alphagram().getRaw());
     }
     
 }
