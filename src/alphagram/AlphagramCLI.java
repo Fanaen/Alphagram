@@ -58,7 +58,7 @@ public class AlphagramCLI {
         
         // Display welcome message --
         System.out.println("-- Alphagram --");
-        System.out.println("Type !q to exit.");
+        System.out.println("Type !q to exit and !h for help.");
         
         while(pursue) {
             System.out.print("> ");
@@ -85,6 +85,10 @@ public class AlphagramCLI {
                             display((Alphagram) entry.getValue());
                             System.out.println();
                         }
+                        break;
+                    case "h":
+                        System.out.println("# Help:\n# \"key = value\" and \"$key\" to set and use a variable.\n" +
+                                "# \"!d\" and \"!l\" to unset and list variables.\n# \"!q\" to exit the program.");
                         break;
                 }
             }
