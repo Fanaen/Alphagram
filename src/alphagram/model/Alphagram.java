@@ -52,6 +52,7 @@ public class Alphagram {
         
         alphagram = TextHelper.removeDiacritics(alphagram);
         alphagram = alphagram.toLowerCase(Locale.ENGLISH);
+        alphagram = TextHelper.handleNumbers(alphagram);
         alphagram = TextHelper.removeNonLetters(alphagram);
         alphagram = TextHelper.sortLetters(alphagram);
         

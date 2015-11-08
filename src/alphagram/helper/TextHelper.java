@@ -26,6 +26,8 @@ package alphagram.helper;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,6 +48,21 @@ public class TextHelper {
         char[] ar = input.toCharArray();
         Arrays.sort(ar);
         return String.valueOf(ar);
+    }
+
+    public static String handleNumbers(String input) {
+        Pattern p = Pattern.compile("([a-zA-Z])([0-9]+)");
+        Matcher m = p.matcher(input);
+        
+        while(m.find()) {
+            String letter = m.group(1);
+            String sNumber = m.group(2);
+            int number = Integer.parseInt(sNumber);
+            
+            input = input.replace(letter + sNumber, new String(new char[number]).replace("\0", letter));
+        }
+        
+        return input;
     }
     
 }
