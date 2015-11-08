@@ -121,13 +121,16 @@ public class AlphagramCLI {
             Alphagram alphagram = new Alphagram("");
                      
             for (String word : words) {   
-                i++;
+                // Dismiss empty words --
+                if(word.trim().equals("")) continue;              
                 
                 // Handle operators --
                 if(word.trim().equals("+") || word.trim().equals("-")) {
                     add = word.equals("+");
                     continue;
                 }
+                
+                i++;  
                 
                 if(add) {
                     // Add the word to the result --

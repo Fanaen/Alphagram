@@ -101,6 +101,12 @@ public class Alphagram {
                 lastLetter = next;
             }
         }
+        
+        // Remove items with 0 occurences --
+        for (Iterator<Letter> iterator = letterOccurenceList.iterator(); iterator.hasNext();) {
+            Letter next = iterator.next();
+            if(next.getNbOccurence() == 0) iterator.remove();
+        }
     }
 
     
@@ -108,6 +114,10 @@ public class Alphagram {
     
     public String getRaw() {
         String positive = "", negative = "";
+        
+        if(letterOccurenceList.size() == 0) {
+            return "*";
+        }
         
         for (Letter l : letterOccurenceList) {
             if(l.getNbOccurence() > 0) {
@@ -123,6 +133,10 @@ public class Alphagram {
     
     public String getShort() {
         String positive = "", negative = "";
+        
+        if(letterOccurenceList.size() == 0) {
+            return "*";
+        }
         
         for (Letter l : letterOccurenceList) {
             if(l.getNbOccurence() > 0) {
