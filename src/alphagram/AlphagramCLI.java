@@ -58,16 +58,35 @@ public class AlphagramCLI {
         
         // Display welcome message --
         System.out.println("-- Alphagram --");
-        System.out.println("Type \"quit\" to exit.");
+        System.out.println("Type !q to exit.");
         
         while(pursue) {
             System.out.print("> ");
             line = in.nextLine();
             
-            // Quit condition --
-            if(line.toLowerCase().equals("quit")) {
-                pursue = false;
-                System.out.println("ahknsT for ginsu Aaaghlmpr. Bey!");
+            // Commands --
+            Pattern p = Pattern.compile("^!([a-z])(.*)$");
+            Matcher m = p.matcher(line.trim());
+
+            if(m.matches()) {
+                String command = m.group(1), param = m.group(2).trim();
+                switch(command) {
+                    case "q":
+                        pursue = false;
+                        System.out.println("ahknsT for ginsu Aaaghlmpr. Bey!");
+                        break;
+                    case "d":
+                        System.out.println(variableMap.remove(param) == null ? 
+                                "# Variable not found." : "# Variable unset.");
+                        break;
+                    case "l":
+                        for (Map.Entry entry : variableMap.entrySet()) {
+                            System.out.print("# " + entry.getKey() + ": ");
+                            display((Alphagram) entry.getValue());
+                            System.out.println();
+                        }
+                        break;
+                }
             }
             // Standard line --
             else {
@@ -83,12 +102,13 @@ public class AlphagramCLI {
         
         if(m.matches()) {
             String key = m.group(1);
-            Alphagram alphagram = processLine(m.group(2));
-            variableMap.put(key, alphagram);
+            System.out.print("# $" + key + ": ");
             
-            System.out.println("# " + key + " set.");
+            Alphagram alphagram = processLine(m.group(2));
+            variableMap.put(key, alphagram);            
         }
         else {
+            System.out.print("# ");
             processLine(line); 
         }
     }
@@ -112,7 +132,6 @@ public class AlphagramCLI {
     private Alphagram processLine(String line) {
         line = insertVariables(line);
         String[] words = line.split(" ");
-        System.out.print("# ");
         boolean add = true;
         
         // Multiple words --
