@@ -39,7 +39,7 @@ public class Alphagram {
 
     // -- Attributes --
     private String rawAlphagram;
-    private List<Letter> letterOccurenceList;
+    private LinkedList<Letter> letterOccurenceList;
     
     // -- Constructors --
     public Alphagram(String rawAnagram) {
@@ -59,9 +59,9 @@ public class Alphagram {
         return alphagram;
     }
     
-    private static List<Letter> buildLetterOccurenceList(String rawAnagram) {
+    private static LinkedList<Letter> buildLetterOccurenceList(String rawAnagram) {
         char[] ar = rawAnagram.toCharArray();
-        List<Letter> newList = new LinkedList();
+        LinkedList<Letter> newList = new LinkedList();
         Letter currentLetter = null;
         
         for (char c : ar) {
@@ -108,6 +108,35 @@ public class Alphagram {
             Letter next = iterator.next();
             if(next.getNbOccurence() == 0) iterator.remove();
         }
+    }
+    
+    public boolean contains(String value) {
+        List<Letter> remaining = (List<Letter>) letterOccurenceList.clone();
+        char[] array = value.toCharArray();
+        
+        // For each character in the string --
+        for (int i = 0; i < array.length; i++) {
+            char character = array[i];
+            boolean characterIsPresent = false;
+            
+            // Search a letter for each char -- 
+            for (Iterator<Letter> iterator = remaining.iterator(); iterator.hasNext();) {
+                Letter next = iterator.next();
+                
+                // If present, remove it --
+                if(next.getLetter() == character) {
+                    iterator.remove();
+                    characterIsPresent = true;
+                    break;
+                }
+            }
+            
+            if(!characterIsPresent) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     

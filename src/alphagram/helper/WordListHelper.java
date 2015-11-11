@@ -25,8 +25,15 @@ package alphagram.helper;
 
 import alphagram.model.Alphagram;
 import fr.fanaen.wordlist.WordListGenerator;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,8 +53,44 @@ public class WordListHelper {
         }
     }
 
-    public static void searchInIndex(String index, Alphagram alpha) {
-        System.out.println("Search " + alpha.getShort() + " in " + index);
+    public static void searchInIndex(String index, Alphagram alpha) {        
+        // Get some info converted --
+        File file = new File("index/" + index);
+        Charset charset = Charset.forName("UTF-8");
+        
+        // Check file --
+        if(!file.exists()) {
+            System.err.println("# This index does not exist.");
+            return;
+        }
+        
+        // Counter --
+        int wordCount = 0;
+        int alphaCount = 0;
+        
+        // Read the file --
+        try(BufferedReader br = Files.newBufferedReader(file.toPath(), charset)) {
+            for(String line; (line = br.readLine()) != null; ) {                
+                if(alpha.contains(line.split(":")[0])) {
+                    String[] info = line.split(":");
+                    String[] words = line.substring(info[0].length() + 1).split(";");
+                    
+                    System.out.print(info[0] + ": ");
+                    for (int i = 0; i < words.length; i++) {
+                         System.out.print(words[i]);
+                    }
+                    
+                    System.out.println();
+                    wordCount += words.length;
+                    alphaCount++;
+                    
+                }       
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        System.out.println("# "+ wordCount + " words in " + alphaCount + " alphagrams.");
     }
     
 }
