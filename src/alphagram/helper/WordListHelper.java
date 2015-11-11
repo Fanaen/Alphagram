@@ -24,6 +24,9 @@
 package alphagram.helper;
 
 import alphagram.model.Alphagram;
+import fr.fanaen.wordlist.WordListGenerator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,8 +34,16 @@ import alphagram.model.Alphagram;
  */
 public class WordListHelper {
     
-    public static void generateIndex(String source, String index) {
-        System.out.println("Generate " + index + " from " + source);
+    public static void generateIndex(String source, final String index) {
+        try {
+            IndexGenerator listener = new IndexGenerator(index);
+            WordListGenerator generator = new WordListGenerator("data/" + source, listener);
+            generator.readFile();
+            generator.displayStatistics();
+            System.out.println(" * " + listener.getCount() + " alphagrams");
+        } catch (Exception ex) {
+            Logger.getLogger(WordListHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void searchInIndex(String index, Alphagram alpha) {
