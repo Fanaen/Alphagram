@@ -23,6 +23,7 @@
  */
 package alphagram;
 
+import alphagram.helper.WordListHelper;
 import alphagram.model.Alphagram;
 import alphagram.model.Anagram;
 import java.util.HashMap;
@@ -86,9 +87,28 @@ public class AlphagramCLI {
                             System.out.println();
                         }
                         break;
+                    case "g":
+                        String[] params = param.trim().split(" ");
+                        if(params.length == 2) {
+                            WordListHelper.generateIndex(params[0], params[1]);
+                        }
+                        break;
+                    case "s":
+                        String index = param.split(" ")[0];
+                        String alpha = param.substring(param.indexOf(index) + index.length());
+                        WordListHelper.searchInIndex(index, processOperation(alpha));
+                        break;
                     case "h":
-                        System.out.println("# Help:\n# \"key = value\" and \"$key\" to set and use a variable.\n" +
-                                "# \"!d\" and \"!l\" to unset and list variables.\n# \"!q\" to exit the program.");
+                        System.out.println("# Help:"
+                                + "\n# \"a - b\" to substract alphagrams"
+                                + "\n# \"key = value\" to set a variable."
+                                + "\n# \"$key\" to use it"
+                                + "\n# \"!d\" to unset a variable"
+                                + "\n# \"!l\" list variables."
+                                + "\n# \"!d\" to unset a variable"
+                                + "\n# \"!g <source> <index>\" to generate a alphagram index from hunspell dictionaries"
+                                + "\n# \"!s <index> <alphagram>\" to search possibilities in an alphagram index "
+                                + "\n# \"!q\" to exit the program.");
                         break;
                 }
             }
@@ -99,22 +119,25 @@ public class AlphagramCLI {
         }
     }
     
-    private void processOperation(String line) {
+    private Alphagram processOperation(String line) {
         
         Pattern p = Pattern.compile("^([a-zA-Z0-9]+) *= *(.+)$");
         Matcher m = p.matcher(line.trim());
+        Alphagram alphagram;
         
         if(m.matches()) {
             String key = m.group(1);
             System.out.print("# $" + key + ": ");
             
-            Alphagram alphagram = processLine(m.group(2));
+            alphagram = processLine(m.group(2));
             variableMap.put(key, alphagram);            
         }
         else {
             System.out.print("# ");
-            processLine(line); 
+            alphagram = processLine(line); 
         }
+        
+        return alphagram;
     }
     
     private String insertVariables(String line) {
