@@ -24,11 +24,6 @@
 package alphagram.model;
 
 import alphagram.helper.TextHelper;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -39,12 +34,12 @@ public class Alphagram {
 
     // -- Attributes --
     private String rawAlphagram;
-    private LinkedList<Letter> letterOccurenceList;
+    private int[] occurenceList; 
     
     // -- Constructors --
     public Alphagram(String rawAnagram) {
         rawAlphagram = buildRawAlphagram(rawAnagram);
-        letterOccurenceList = Alphagram.buildLetterOccurenceList(rawAlphagram);
+        occurenceList = Alphagram.buildLetterOccurenceList(rawAlphagram);
     }
     
     private String buildRawAlphagram(String rawAnagram) {
@@ -59,130 +54,105 @@ public class Alphagram {
         return alphagram;
     }
     
-    private static LinkedList<Letter> buildLetterOccurenceList(String rawAnagram) {
+    private static int[] buildLetterOccurenceList(String rawAnagram) {
         char[] ar = rawAnagram.toCharArray();
-        LinkedList<Letter> newList = new LinkedList();
-        Letter currentLetter = null;
+        int[] occurenceList = new int[26];
+        int index;
         
+        // Init occurenceList --
+        for (int i = 0; i < 26; i++) {
+            occurenceList[i] = 0;
+        }
+        
+        // Parse string --
         for (char c : ar) {
-            // New character --
-            if(currentLetter == null || currentLetter.getLetter() != c) {
-                currentLetter = new Letter(c);
-                newList.add(currentLetter);
-            }
-            // Existing character --
-            else {
-                currentLetter.increaseNbOccurence();
+            index = charToIndex(c);
+            
+            if(index >= 0 && index < 26) {
+                occurenceList[index]++;
             }
         }
         
-        return newList;
+        return occurenceList;
     }
 
     public void apply(Alphagram processedWord, int coef) {
-        // Transform item to add as modifier --
-        processedWord.applyCoef(coef);
-        
-        // Merge lists and sort the result --
-        letterOccurenceList.addAll(processedWord.letterOccurenceList);
-        Collections.sort(letterOccurenceList);
-        
-        // Merge multiple items --
-        Letter lastLetter = null;
-        for (Iterator<Letter> iterator = letterOccurenceList.iterator(); iterator.hasNext();) {
-            Letter next = iterator.next();
-            
-            if(lastLetter != null && lastLetter.equals(next)) {
-                // Items are identical, merge them --
-                lastLetter.increaseNbOccurence(next.getNbOccurence());
-                iterator.remove();
-            }
-            else {
-                // Items are not identical, pursue --
-                lastLetter = next;
-            }
-        }
-        
-        // Remove items with 0 occurences --
-        for (Iterator<Letter> iterator = letterOccurenceList.iterator(); iterator.hasNext();) {
-            Letter next = iterator.next();
-            if(next.getNbOccurence() == 0) iterator.remove();
+        for (int i = 0; i < 26; i++) {
+            occurenceList[i] += processedWord.occurenceList[i] * coef;
         }
     }
     
-    public boolean contains(String value) {
-        List<Letter> remaining = (List<Letter>) letterOccurenceList.clone();
-        char[] array = value.toCharArray();
-        
-        // For each character in the string --
-        for (int i = 0; i < array.length; i++) {
-            char character = array[i];
-            boolean characterIsPresent = false;
-            
-            // Search a letter for each char -- 
-            for (Iterator<Letter> iterator = remaining.iterator(); iterator.hasNext();) {
-                Letter next = iterator.next();
-                
-                // If present, remove it --
-                if(next.getLetter() == character) {
-                    iterator.remove();
-                    characterIsPresent = true;
-                    break;
-                }
-            }
-            
-            if(!characterIsPresent) {
+    public boolean contains(Alphagram alpha) {
+        for (int i = 0; i < 26; i++) {
+            // If an occurence is lower than in the given alphagram, return false --
+            if(occurenceList[i] < alpha.occurenceList[i])
                 return false;
-            }
         }
-        
+        // Otherwise, the local alphagram contains the given one --
         return true;
     }
-
+    
+    public boolean contains(String value) {
+        return contains(new Alphagram(value));
+    }
     
     // -- Getters & Setters --
     
     public String getRaw() {
-        String positive = "", negative = "";
+        StringBuilder positive = new StringBuilder(""), negative = new StringBuilder("");
         
-        if(letterOccurenceList.size() == 0) {
-            return "*";
-        }
-        
-        for (Letter l : letterOccurenceList) {
-            if(l.getNbOccurence() > 0) {
-                positive += l.toStringExpanded();
+        for (int i = 0; i < 26; i++) {
+            int occurences = occurenceList[i];
+            
+            if(occurences > 0) {
+                positive.append(repeatChar(indexToChar(i), occurences));
             }
-            else {
-                negative += l.toStringExpanded();
+            else if(occurences < 0) {
+                negative.append(repeatChar(indexToChar(i), occurences));
             }
         }
         
-        return positive + (negative.equals("") ? "" : "-" + negative);
+        return positive + (negative.length() == 0 ? "" : "-" + negative);
     }
     
+    
     public String getShort() {
-        String positive = "", negative = "";
+        StringBuilder positive = new StringBuilder(""), negative = new StringBuilder("");
         
-        if(letterOccurenceList.size() == 0) {
-            return "*";
+        for (int i = 0; i < 26; i++) {
+            int occurences = occurenceList[i];
+            
+            if(occurences > 0) {
+                positive.append(indexToChar(i));
+                if(occurences != 1) positive.append(occurences);
+            }
+            else if(occurences < 0) {
+                negative.append(indexToChar(i));
+                if(occurences != -1) negative.append(-occurences);
+            }
         }
         
-        for (Letter l : letterOccurenceList) {
-            if(l.getNbOccurence() > 0) {
-                positive += l.toStringReduced();
-            }
-            else {
-                negative += l.toStringReduced();
-            }
-        }
-        
-        return positive + (negative.equals("") ? "" : "-" + negative);
+        return positive + (negative.length() == 0 ? "" : "-" + negative);
     }
-
-    private void applyCoef(int coef) {
-        for (Letter l : letterOccurenceList) {
-            l.setNbOccurence(coef * l.getNbOccurence());
+    
+    // -- Helpers --
+    
+    private static String repeatChar(char c, int number) {
+        number = Math.abs(number);
+        StringBuilder result = new StringBuilder(number);
+        
+        for (int i = 0; i < number; i++) {
+            result.append(c);
         }
+        
+        return result.toString();
+    }
+    
+    private static char indexToChar(int index) {
+        return (char) (index + 97);
+    }
+    
+    private static int charToIndex(char c) {
+        return (int) (c - 97);
     }
 }
