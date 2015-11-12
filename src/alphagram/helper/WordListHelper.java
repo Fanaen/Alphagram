@@ -60,7 +60,7 @@ public class WordListHelper {
     
     public static IndexSlice generateSlice(String index, Alphagram alpha) {
         // Create the index slice --
-        IndexSlice slice = new IndexSlice();
+        IndexSlice slice = new IndexSlice(alpha);
                 
         // Get some info converted --
         File file = new File("index/" + index);

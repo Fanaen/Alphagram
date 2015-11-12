@@ -37,12 +37,14 @@ public class IndexSlice {
     protected int alphaCount = 0;
     
     protected List<IndexLine> lineList;
+    protected Alphagram referent;
     
     
     // -- Constructors --
     
-    public IndexSlice() {
+    public IndexSlice(Alphagram alphagram) {
         lineList = new LinkedList<>();
+        referent = alphagram;
     }
     
     // -- Methods --
@@ -53,7 +55,7 @@ public class IndexSlice {
         String alpha = line.split(":")[0];
         String[] words = line.substring(alpha.length() + 1).split("; ");
         
-        lineList.add(new IndexLine(alpha, words));
+        lineList.add(new IndexLine(alpha, words, this));
         
         alphaCount++;
         wordCount += words.length;
@@ -68,4 +70,9 @@ public class IndexSlice {
             indexLine.display();
         }
     }
+
+    public Alphagram getReferentAlphagram() {
+        return referent;
+    }
+    
 }

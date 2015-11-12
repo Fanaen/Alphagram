@@ -30,22 +30,39 @@ package alphagram.model;
 public class IndexLine {
     
     // -- Attributes --
-    public Alphagram alphagram;
-    public String[] wordArray;
+    protected Alphagram alphagram;
+    protected String[] wordArray;
+    protected IndexSlice parent;
+    
+    protected float ratio; // Nb of letters compared to the referent alphagram
     
     // -- Constructors --
     
-    public IndexLine(String alpha, String[] words) {
+    public IndexLine(String alpha, String[] words, IndexSlice slice) {
         alphagram = new Alphagram(alpha);
         wordArray = words;
+        parent = slice;
+        updateRatio();
     }
     
     // -- Methods --
     
+    private void updateRatio() {
+        ratio = (float) alphagram.getRaw().length() / (float) parent.getReferentAlphagram().getRaw().length();
+    }
+    
     // -- Getters and setters --
 
     void display() {
-        System.out.print(alphagram.getRaw() + ": ");
+        
+        // Display ratio --
+        if(ratio == 1) 
+            System.out.print("**");
+        else
+            System.out.format("%02d", (int) Math.round(ratio * 100));
+        
+        // Display content --
+        System.out.print("% " + alphagram.getRaw() + ": ");
         for (int i = 0; i < wordArray.length; i++) {
             System.out.print((i == 0 ? "" : ", ")+ wordArray[i]);
         }
