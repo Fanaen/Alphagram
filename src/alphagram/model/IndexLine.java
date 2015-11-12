@@ -27,7 +27,7 @@ package alphagram.model;
  *
  * @author Fanaen <contact@fanaen.fr>
  */
-public class IndexLine {
+public class IndexLine implements Comparable<IndexLine>{
     
     // -- Attributes --
     protected Alphagram alphagram;
@@ -49,6 +49,11 @@ public class IndexLine {
     
     private void updateRatio() {
         ratio = (float) alphagram.getRaw().length() / (float) parent.getReferentAlphagram().getRaw().length();
+    }
+    
+    @Override
+    public int compareTo(IndexLine o) {
+        return o.getRatio() < ratio ? 1 : -1;
     }
     
     // -- Getters and setters --
@@ -79,5 +84,5 @@ public class IndexLine {
 
     public float getRatio() {
         return ratio;
-    }    
+    }
 }

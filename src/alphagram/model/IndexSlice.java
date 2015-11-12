@@ -23,6 +23,8 @@
  */
 package alphagram.model;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,8 +51,6 @@ public class IndexSlice {
     }
     
     // -- Methods --
-    
-    // -- Getters and setters --
 
     public void addLine(String line) {
         String alpha = line.split(":")[0];
@@ -71,11 +71,7 @@ public class IndexSlice {
             indexLine.display();
         }
     }
-
-    public Alphagram getReferentAlphagram() {
-        return referent;
-    }
-
+    
     public void keep(int limit, boolean upper) {
         for (Iterator<IndexLine> iterator = lineList.iterator(); iterator.hasNext();) {
             IndexLine next = iterator.next();
@@ -89,6 +85,16 @@ public class IndexSlice {
                 iterator.remove();
             }
         }
+    }
+    
+    public void sort() {
+        Collections.sort(lineList);
+    }
+    
+    // -- Getters and setters --
+
+    public Alphagram getReferentAlphagram() {
+        return referent;
     }
     
 }

@@ -62,7 +62,7 @@ public class WordListHelper {
         for (int i = 1; i < params.length; i++) {
             String param = params[i];
             
-            Pattern p = Pattern.compile("([0-9]{1,2})([\\+-]?)");
+            Pattern p = Pattern.compile("([0-9]{1,2})([\\+-])?");
             Matcher m = p.matcher(params[i].trim());
             
             if(m.find()) {
@@ -70,7 +70,7 @@ public class WordListHelper {
                 int limit = 0;
 
                 // Handle "+" and "-" --
-                if(m.groupCount() == 2) {
+                if(m.group(2) != null) {
                     upper = m.group(2).contains("+");
                 }
 
@@ -81,6 +81,7 @@ public class WordListHelper {
             }
         }
         
+        slice.sort();
         slice.displayContent();
         slice.displayStatistics();
     }
