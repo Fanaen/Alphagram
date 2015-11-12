@@ -57,9 +57,20 @@ public class IndexGenerator implements WordListGeneratorListener {
             
     @Override
     public void onNewWord(Word newWord) {
-        Alphagram alpha = new Alphagram(newWord.getContent());
+        // Skip words with numbers --
+        String word = newWord.getContent();
+        if(!word.matches("[^0-9]+")) 
+            return;
+        
+        // Prepare the alphagram --
+        Alphagram alpha = new Alphagram(word);
         String key = alpha.getRaw();
         
+        // Skip one letter words --
+        if(alpha.getRaw().length() == 1)
+            return;
+        
+        // Add the alphagram --
         if(storage.containsKey(key)) {
             storage.get(key).add(newWord.getContent());
         }
