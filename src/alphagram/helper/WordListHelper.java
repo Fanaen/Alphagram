@@ -33,6 +33,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -52,8 +54,33 @@ public class WordListHelper {
         }
     }
 
-    public static void searchInIndex(String index, Alphagram alpha) {  
-        IndexSlice slice = generateSlice(index, alpha);
+    public static void searchInIndex(String index, Alphagram alpha) {
+        String[] params = index.split("/");
+        IndexSlice slice = generateSlice(params[0], alpha);
+        
+        // Handle ratio filter "50+" --
+        for (int i = 1; i < params.length; i++) {
+            String param = params[i];
+            
+            Pattern p = Pattern.compile("([0-9]{1,2})([\\+-]?)");
+            Matcher m = p.matcher(params[i].trim());
+            
+            if(m.find()) {
+                boolean upper = true;
+                int limit = 0;
+
+                // Handle "+" and "-" --
+                if(m.groupCount() == 2) {
+                    upper = m.group(2).contains("+");
+                }
+
+                // Handle "50" in "50+" --
+                limit = Integer.parseInt(m.group(1));
+
+                slice.keep(limit, upper);
+            }
+        }
+        
         slice.displayContent();
         slice.displayStatistics();
     }

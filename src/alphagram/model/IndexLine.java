@@ -68,5 +68,16 @@ public class IndexLine {
         }
         System.out.println();
     }
-    
+
+    public Alphagram getAlphagram() {
+        return alphagram;
+    }
+
+    public String[] getWordArray() {
+        return wordArray;
+    }
+
+    public float getRatio() {
+        return ratio;
+    }    
 }

@@ -23,6 +23,7 @@
  */
 package alphagram.model;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -73,6 +74,21 @@ public class IndexSlice {
 
     public Alphagram getReferentAlphagram() {
         return referent;
+    }
+
+    public void keep(int limit, boolean upper) {
+        for (Iterator<IndexLine> iterator = lineList.iterator(); iterator.hasNext();) {
+            IndexLine next = iterator.next();
+            
+            if(next.getRatio()*100 < limit && upper) {
+                // System.out.println("Remove lesser");
+                iterator.remove();
+            } 
+            else if(next.getRatio()*100 > limit && !upper) {
+                // System.out.println("Remove upper");
+                iterator.remove();
+            }
+        }
     }
     
 }
