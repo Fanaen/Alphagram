@@ -67,7 +67,7 @@ public class IndexGenerator implements WordListGeneratorListener {
         String key = alpha.getRaw();
         
         // Skip one letter words --
-        if(alpha.getRaw().length() == 1)
+        if(alpha.getRaw().length() <= 1)
             return;
         
         // Add the alphagram --
