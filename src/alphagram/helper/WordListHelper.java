@@ -31,8 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,14 +48,30 @@ public class WordListHelper {
             generator.displayStatistics();
             System.out.println(" * " + listener.getCount() + " alphagrams");
         } catch (Exception ex) {
-            Logger.getLogger(WordListHelper.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
+    }
+    
+    public static void combineFromSearchInIndex(String index, Alphagram alpha) {
+        String[] params = index.split("/");
+        IndexSlice slice = generateSlice(params[0], alpha);
+        
+        slice.combineToFile("gen/" + index + ".comb." + alpha.getShort());
+        
+        slice.displayStatisticsCombine();
     }
 
     public static void searchInIndex(String index, Alphagram alpha) {
         String[] params = index.split("/");
         IndexSlice slice = generateSlice(params[0], alpha);
+        handleSearchParams(params, slice);        
         
+        slice.sort();
+        slice.displayContent();
+        slice.displayStatistics();
+    }
+    
+    public static void handleSearchParams(String[] params, IndexSlice slice) {
         // Handle ratio filter "50+" --
         for (int i = 1; i < params.length; i++) {
             String param = params[i];
@@ -80,10 +94,6 @@ public class WordListHelper {
                 slice.keep(limit, upper);
             }
         }
-        
-        slice.sort();
-        slice.displayContent();
-        slice.displayStatistics();
     }
     
     public static IndexSlice generateSlice(String index, Alphagram alpha) {

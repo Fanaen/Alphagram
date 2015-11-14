@@ -98,6 +98,11 @@ public class AlphagramCLI {
                         String alpha = param.substring(param.indexOf(index) + index.length());
                         WordListHelper.searchInIndex(index, processOperation(alpha));
                         break;
+                    case "c":
+                        String indexC = param.split(" ")[0];
+                        String alphaC = param.substring(param.indexOf(indexC) + indexC.length());
+                        WordListHelper.combineFromSearchInIndex(indexC, processOperation(alphaC));
+                        break;
                     case "h":
                         System.out.println("# Help:"
                                 + "\n# \"a - b\" to substract alphagrams"

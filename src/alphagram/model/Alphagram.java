@@ -33,13 +33,28 @@ import java.util.Locale;
 public class Alphagram {
 
     // -- Attributes --
-    private String rawAlphagram;
     private int[] occurenceList; 
     
     // -- Constructors --
     public Alphagram(String rawAnagram) {
-        rawAlphagram = buildRawAlphagram(rawAnagram);
+        String rawAlphagram = buildRawAlphagram(rawAnagram);
         occurenceList = Alphagram.buildLetterOccurenceList(rawAlphagram);
+    }
+    
+    public Alphagram(Alphagram alphagram) {
+        occurenceList = initOccurenceList();
+        apply(alphagram, 1);
+    }
+    
+    private static int[] initOccurenceList() {
+        int[] occurenceList = new int[26];
+        
+        // Init occurenceList --
+        for (int i = 0; i < 26; i++) {
+            occurenceList[i] = 0;
+        }
+        
+        return occurenceList;
     }
     
     private String buildRawAlphagram(String rawAnagram) {
@@ -56,13 +71,8 @@ public class Alphagram {
     
     private static int[] buildLetterOccurenceList(String rawAnagram) {
         char[] ar = rawAnagram.toCharArray();
-        int[] occurenceList = new int[26];
+        int[] occurenceList = initOccurenceList();
         int index;
-        
-        // Init occurenceList --
-        for (int i = 0; i < 26; i++) {
-            occurenceList[i] = 0;
-        }
         
         // Parse string --
         for (char c : ar) {
@@ -134,6 +144,19 @@ public class Alphagram {
         
         return positive + (negative.length() == 0 ? "" : "-" + negative);
     }
+    
+    
+    public boolean isEmpty() {
+        return countLetters() == 0;
+    }   
+    
+    public int countLetters() {
+        int nb = 0;
+        for (int i = 0; i < 26; i++) {
+            nb += occurenceList[i];
+        }
+        return nb;
+    }   
     
     // -- Helpers --
     

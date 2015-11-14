@@ -23,6 +23,9 @@
  */
 package alphagram.model;
 
+import java.io.PrintStream;
+import java.io.Writer;
+
 /**
  *
  * @author Fanaen <contact@fanaen.fr>
@@ -53,25 +56,23 @@ public class IndexLine implements Comparable<IndexLine>{
     
     @Override
     public int compareTo(IndexLine o) {
-        return o.getRatio() < ratio ? 1 : -1;
+        return o.getRatio() == ratio ? 0 : (o.getRatio() < ratio ? 1 : -1);
     }
     
     // -- Getters and setters --
-
-    void display() {
+    void display(PrintStream stream) {
         
         // Display ratio --
         if(ratio == 1) 
-            System.out.print("**");
+            stream.print("**");
         else
-            System.out.format("%02d", (int) Math.round(ratio * 100));
+            stream.format("%02d", (int) Math.round(ratio * 100));
         
         // Display content --
-        System.out.print("% " + alphagram.getRaw() + ": ");
+        stream.print("% " + alphagram.getRaw() + ": ");
         for (int i = 0; i < wordArray.length; i++) {
-            System.out.print((i == 0 ? "" : ", ")+ wordArray[i]);
+            stream.print((i == 0 ? "" : ", ")+ wordArray[i]);
         }
-        System.out.println();
     }
 
     public Alphagram getAlphagram() {

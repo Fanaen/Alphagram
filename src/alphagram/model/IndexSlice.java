@@ -23,7 +23,11 @@
  */
 package alphagram.model;
 
-import java.util.Collection;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,8 +42,10 @@ public class IndexSlice {
     // -- Attributes --
     protected int wordCount = 0;
     protected int alphaCount = 0;
+    protected int combinationCount = 0;
     
-    protected List<IndexLine> lineList;
+    protected LinkedList<IndexLine> lineList;
+    protected LinkedList<LinkedList<IndexLine>> combineList;
     protected Alphagram referent;
     
     
@@ -51,26 +57,6 @@ public class IndexSlice {
     }
     
     // -- Methods --
-
-    public void addLine(String line) {
-        String alpha = line.split(":")[0];
-        String[] words = line.substring(alpha.length() + 1).split("; ");
-        
-        lineList.add(new IndexLine(alpha, words, this));
-        
-        alphaCount++;
-        wordCount += words.length;
-    }
-    
-    public void displayStatistics() {
-        System.out.println("# "+ wordCount + " words in " + alphaCount + " alphagrams.");
-    }
-    
-    public void displayContent() {
-        for (IndexLine indexLine : lineList) {
-            indexLine.display();
-        }
-    }
     
     public void keep(int limit, boolean upper) {
         for (Iterator<IndexLine> iterator = lineList.iterator(); iterator.hasNext();) {
@@ -91,10 +77,131 @@ public class IndexSlice {
         Collections.sort(lineList);
     }
     
+    public void reverse() {
+        Collections.reverse(lineList);
+    }
+    
+    public void combineToFile(String string) {
+        
+        File file = new File(string);        
+        try (PrintStream stream = new PrintStream(file)) {
+            
+            combine(new IndexCombinatorListener() {
+                @Override
+                public void onNewCombination(LinkedList<IndexLine> combination) {
+                    IndexSlice.displayCombination(combination, stream);
+                    combinationCount++;
+                }
+            });
+            stream.close();
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void combine() {
+        combine(new IndexCombinatorListener() {
+            @Override
+            public void onNewCombination(LinkedList<IndexLine> combination) {
+                combineList.add(combination);
+                combinationCount++;
+            }
+        });
+    }
+    
+    // -- Intern processing methods --
+    
+    private void combine(IndexCombinatorListener listener) {
+        // Prepare the list --
+        sort();
+        reverse();
+        combineList = new LinkedList<>();
+        combinationCount = 0;
+        
+        LinkedList<IndexLine> combinationBeginning = new LinkedList<>();
+        combine((LinkedList<IndexLine>) lineList.clone(), combinationBeginning, listener, referent);
+    }
+    
+    private void combine(LinkedList<IndexLine> remainingList, LinkedList<IndexLine> combinationList, IndexCombinatorListener listener, Alphagram alphagram) {
+        // Parse the list --
+        for (Iterator<IndexLine> iterator = remainingList.iterator(); iterator.hasNext();) {
+            IndexLine next = iterator.next();
+            
+            // Add the current item to the combination --
+            LinkedList<IndexLine> newCombinationList = (LinkedList<IndexLine>) combinationList.clone();
+            newCombinationList.add(next);
+            
+            // If the referent alphagram contains the current item, next iteration --
+            if(alphagram.contains(next.getAlphagram())) {
+                
+                // Remove the letters of the current alphagram from the referent --
+                Alphagram newAlphagram = new Alphagram(alphagram);
+                newAlphagram.apply(next.getAlphagram(), -1);
+
+                // Next step --
+                if(newAlphagram.isEmpty()) {
+                    listener.onNewCombination(newCombinationList);
+                }
+                else {
+                    combine((LinkedList<IndexLine>) remainingList.clone(), newCombinationList, listener, newAlphagram);
+                }
+            }
+            // If not, the combination is finished --
+            else {
+                // TODO Or not ?
+                //listener.onNewCombination(combinationList);
+            }                
+            
+            iterator.remove();            
+        }
+    }
+    
+    
     // -- Getters and setters --
 
     public Alphagram getReferentAlphagram() {
         return referent;
     }
+
+    public void addLine(String line) {
+        String alpha = line.split(":")[0];
+        String[] words = line.substring(alpha.length() + 1).split("; ");
+        
+        lineList.add(new IndexLine(alpha, words, this));
+        
+        alphaCount++;
+        wordCount += words.length;
+    }
     
+    public void displayStatistics() {
+        System.out.println("# "+ wordCount + " words in " + alphaCount + " alphagrams.");
+    }
+    
+    public void displayStatisticsCombine() {
+        System.out.println("# "+ wordCount + " words in " + alphaCount + " alphagrams for "+ combinationCount + " combinations.");
+    }
+    
+    public void displayContent() {
+        for (IndexLine indexLine : lineList) {
+            indexLine.display(System.out);
+            System.out.println();
+        }
+    }
+    
+    public void displayAllCombinations() {
+        for (List<IndexLine> combination : combineList) {
+            displayCombination(combination, System.out);
+        }
+    }
+    
+    public static void displayCombination(List<IndexLine> combination, PrintStream stream) {        
+        int i = 0;
+        for (IndexLine indexLine : combination) {
+            if(i!= 0) stream.print("\n + ");
+            indexLine.display(stream);
+            i++;
+        }
+        stream.println();
+    }
 }
