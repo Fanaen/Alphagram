@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.model;
+package fr.fanaen.alphagram.index;
 
 import java.util.LinkedList;
 

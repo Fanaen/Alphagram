@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.helper;
+package fr.fanaen.alphagram.helper;
 
-import alphagram.model.Alphagram;
-import alphagram.model.IndexSlice;
+import fr.fanaen.alphagram.index.IndexGenerator;
+import fr.fanaen.alphagram.model.Alphagram;
+import fr.fanaen.alphagram.index.IndexSlice;
 import fr.fanaen.wordlist.WordListGenerator;
 import java.io.BufferedReader;
 import java.io.File;

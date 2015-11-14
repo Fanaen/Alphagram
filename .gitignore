@@ -5,6 +5,6 @@ nbproject/
 
 /build/
 /dist/
-index/
-data/
-gen/
+/index/
+/data/
+/gen/

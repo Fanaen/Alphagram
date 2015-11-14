@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.helper;
+package fr.fanaen.alphagram.index;
 
-import alphagram.model.Alphagram;
+import fr.fanaen.alphagram.model.Alphagram;
 import fr.fanaen.wordlist.WordListGeneratorListener;
 import fr.fanaen.wordlist.model.Word;
 import java.io.FileNotFoundException;

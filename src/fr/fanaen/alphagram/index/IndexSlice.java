@@ -21,8 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.model;
+package fr.fanaen.alphagram.index;
 
+import fr.fanaen.alphagram.index.IndexLine;
+import fr.fanaen.alphagram.index.IndexCombinatorListener;
+import fr.fanaen.alphagram.model.Alphagram;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -79,6 +82,8 @@ public class IndexSlice {
         Collections.reverse(lineList);
     }
     
+    // -- Extern processing methods (call intern methods) --
+    
     public void combineToFile(String string) {
         
         File file = new File(string);        
@@ -110,6 +115,7 @@ public class IndexSlice {
     
     // -- Intern processing methods --
     
+    // Starting methods (run the recursive "combine") --
     private void combine(IndexCombinatorListener listener) {
         // Prepare the list --
         sort();
@@ -121,6 +127,7 @@ public class IndexSlice {
         combine((LinkedList<IndexLine>) lineList.clone(), combinationBeginning, listener, referent);
     }
     
+    // Recursive methods --
     private void combine(LinkedList<IndexLine> remainingList, LinkedList<IndexLine> combinationList, IndexCombinatorListener listener, Alphagram alphagram) {
         // Parse the list --
         for (Iterator<IndexLine> iterator = remainingList.iterator(); iterator.hasNext();) {
@@ -155,22 +162,7 @@ public class IndexSlice {
         }
     }
     
-    
-    // -- Getters and setters --
-
-    public Alphagram getReferentAlphagram() {
-        return referent;
-    }
-
-    public void addLine(String line) {
-        String alpha = line.split(":")[0];
-        String[] words = line.substring(alpha.length() + 1).split("; ");
-        
-        lineList.add(new IndexLine(alpha, words, this));
-        
-        alphaCount++;
-        wordCount += words.length;
-    }
+    // -- Display methods --
     
     public void displayStatistics() {
         System.out.println("# "+ wordCount + " words in " + alphaCount + " alphagrams.");
@@ -201,5 +193,21 @@ public class IndexSlice {
             i++;
         }
         stream.println();
+    }
+    
+    // -- Getters and setters --
+
+    public Alphagram getReferentAlphagram() {
+        return referent;
+    }
+
+    public void addLine(String line) {
+        String alpha = line.split(":")[0];
+        String[] words = line.substring(alpha.length() + 1).split("; ");
+        
+        lineList.add(new IndexLine(alpha, words, this));
+        
+        alphaCount++;
+        wordCount += words.length;
     }
 }

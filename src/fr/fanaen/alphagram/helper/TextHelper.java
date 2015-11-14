@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.helper;
+package fr.fanaen.alphagram.helper;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;

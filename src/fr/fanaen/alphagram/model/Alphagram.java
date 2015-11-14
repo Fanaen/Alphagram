@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram.model;
+package fr.fanaen.alphagram.model;
 
-import alphagram.helper.TextHelper;
+import fr.fanaen.alphagram.helper.TextHelper;
 import java.util.Locale;
 
 /**

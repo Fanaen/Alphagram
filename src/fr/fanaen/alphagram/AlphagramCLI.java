@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package alphagram;
+package fr.fanaen.alphagram;
 
-import alphagram.helper.WordListHelper;
-import alphagram.model.Alphagram;
-import alphagram.model.Anagram;
+import fr.fanaen.alphagram.helper.WordListHelper;
+import fr.fanaen.alphagram.model.Alphagram;
+import fr.fanaen.alphagram.model.Anagram;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
