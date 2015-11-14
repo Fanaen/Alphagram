@@ -40,26 +40,24 @@ import java.util.regex.Pattern;
  */
 public class WordListHelper {
     
+    // -- Generation methods --
+    
     public static void generateIndex(String source, final String index) {
+        // Read the given dictionary (source) and write a file with an alphagram list with corresponding words --
         try {
             IndexGenerator listener = new IndexGenerator(index);
             WordListGenerator generator = new WordListGenerator("data/" + source, listener);
+            
             generator.readFile();
             generator.displayStatistics();
+            
             System.out.println(" * " + listener.getCount() + " alphagrams");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
     
-    public static void combineFromSearchInIndex(String index, Alphagram alpha) {
-        String[] params = index.split("/");
-        IndexSlice slice = generateSlice(params[0], alpha);
-        
-        slice.combineToFile("gen/" + index + ".comb." + alpha.getShort());
-        
-        slice.displayStatisticsCombine();
-    }
+    // -- Search methods --
 
     public static void searchInIndex(String index, Alphagram alpha) {
         String[] params = index.split("/");
@@ -96,6 +94,7 @@ public class WordListHelper {
         }
     }
     
+    // Generate a small part of the index as an object --
     public static IndexSlice generateSlice(String index, Alphagram alpha) {
         // Create the index slice --
         IndexSlice slice = new IndexSlice(alpha);
@@ -122,6 +121,17 @@ public class WordListHelper {
         }
         
         return slice;
+    }
+    
+    // -- Combinations methods (require a generated index) --
+    
+    public static void combineFromSearchInIndex(String index, Alphagram alpha) {
+        String[] params = index.split("/");
+        IndexSlice slice = generateSlice(params[0], alpha);
+        
+        slice.combineToFile("gen/" + index + ".comb." + alpha.getShort());
+        
+        slice.displayStatisticsCombine();
     }
     
 }

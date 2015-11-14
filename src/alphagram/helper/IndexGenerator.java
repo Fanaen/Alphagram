@@ -87,9 +87,11 @@ public class IndexGenerator implements WordListGeneratorListener {
             // Write the index --
             PrintWriter writer = new PrintWriter(outputPath, "UTF-8");
             
+            // A line per alphagram --
             for (Entry<String, Set<String>> entry : storage.entrySet()) {
                 writer.print(entry.getKey() + ":");
                 
+                // Words separated by semi-colon --
                 int i = 0;
                 for (String word : entry.getValue()) {
                     writer.print((i == 0 ? "":"; ") + word);
@@ -99,6 +101,7 @@ public class IndexGenerator implements WordListGeneratorListener {
                 writer.println();
             }
             
+            // Close the file --
             writer.close();       
             
         } catch (FileNotFoundException ex) {

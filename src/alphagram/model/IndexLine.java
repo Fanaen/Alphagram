@@ -24,10 +24,9 @@
 package alphagram.model;
 
 import java.io.PrintStream;
-import java.io.Writer;
 
 /**
- *
+ * 
  * @author Fanaen <contact@fanaen.fr>
  */
 public class IndexLine implements Comparable<IndexLine>{

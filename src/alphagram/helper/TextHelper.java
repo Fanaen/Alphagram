@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 public class TextHelper {
     
     public static String removeDiacritics(String input) {
+        // Remove diacritics like accents --
         return Normalizer.normalize(input, Form.NFD)
             .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     } 
@@ -51,6 +52,7 @@ public class TextHelper {
     }
 
     public static String handleNumbers(String input) {
+        // Multiply letter before numbers (like shortened alphagrams) --
         Pattern p = Pattern.compile("([a-zA-Z])([0-9]+)");
         Matcher m = p.matcher(input);
         

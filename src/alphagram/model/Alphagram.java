@@ -46,6 +46,8 @@ public class Alphagram {
         apply(alphagram, 1);
     }
     
+    // -- Init methods --
+    
     private static int[] initOccurenceList() {
         int[] occurenceList = new int[26];
         
@@ -85,6 +87,8 @@ public class Alphagram {
         
         return occurenceList;
     }
+    
+    // -- Operation methods --
 
     public void apply(Alphagram processedWord, int coef) {
         for (int i = 0; i < 26; i++) {
@@ -109,6 +113,7 @@ public class Alphagram {
     // -- Getters & Setters --
     
     public String getRaw() {
+        // Build an letter only alphagram --
         StringBuilder positive = new StringBuilder(""), negative = new StringBuilder("");
         
         for (int i = 0; i < 26; i++) {
@@ -127,6 +132,7 @@ public class Alphagram {
     
     
     public String getShort() {
+        // Build an alphagram with numbers after letters --
         StringBuilder positive = new StringBuilder(""), negative = new StringBuilder("");
         
         for (int i = 0; i < 26; i++) {
