@@ -62,6 +62,7 @@ public class Alphagram {
     private String buildRawAlphagram(String rawAnagram) {
         String alphagram = rawAnagram;
         
+        alphagram = TextHelper.separateUnicodeLigature(alphagram);
         alphagram = TextHelper.removeDiacritics(alphagram);
         alphagram = alphagram.toLowerCase(Locale.ENGLISH);
         alphagram = TextHelper.handleNumbers(alphagram);

@@ -67,4 +67,14 @@ public class TextHelper {
         return input;
     }
     
+    public static String separateUnicodeLigature(String value) {
+        
+        value = value.replaceAll("Œ", "OE");
+        value = value.replaceAll("œ", "oe");
+        value = value.replaceAll("Æ", "AE");
+        value = value.replaceAll("æ", "ae");
+        
+        return value;
+    }
+    
 }
